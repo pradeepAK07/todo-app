@@ -1,30 +1,34 @@
-import './App.css';
-import { useState } from 'react';
-import TodoList from './List/TodoList';
+import { useSelector, useDispatch } from "react-redux";
+import { getusers } from "./userSlice";
+import { useEffect } from "react";
+import { addData, deleteData } from "./Root/actions";
 
 function App() {
-  const [data,setData] = useState('');
-  const [todo,setTodo] = useState([]);
+  const dispatch = useDispatch();
 
-const HandleInput = (e)=>{
-setData(e.target.value);
-}
+  // const apidata = useSelector((state) => state.data.todoData);
+  // console.log(apidata);
+  // const HandleDelete = () => dispatch(deleteData());
+  // const HandleAdd = () => dispatch(addData());
 
-const HandleAdd = ()=>{
-    setTodo([...todo,{id:todo.length,todo:data}])
-    setData('')
-}
+  const { user, isLoading } = useSelector((state) => state.user);
+  const value = useSelector((state) => state.user.isLoading);
+  console.log(value);
+
+  useEffect(() => {
+    dispatch(getusers());
+  }, []);
 
   return (
     <div className="App">
-   <h2>Todo App</h2>
-   <input value={data} onChange={HandleInput}/><button onClick={HandleAdd}>Add</button>
-{
-  todo.map((todo)=>{
-return <TodoList todo = {todo}/>
-  })
-}
+      {user.map((user) => {
+        return <p>{user.name}</p>;
+      })}
 
+      {/* <button onClick={HandleAdd}>add data</button>
+      <button onClick={HandleDelete}>delete data</button>
+
+      {<div>{JSON.stringify(apidata)}</div>} */}
     </div>
   );
 }
